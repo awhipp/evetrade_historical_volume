@@ -1,12 +1,10 @@
 # This is a basic workflow to help you get started with Actions
 name: Impute Historical Volume from Market Orders
 
-# Controls when the workflow will run
+# Workflow will run daily
 on:
-  push:
-    branches: [ main ]
-  # schedule:
-  #   - cron:  '0 5 * * *' 
+  schedule:
+    - cron:  '0 5 * * *' 
     
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,7 +19,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
-      - name: Install GitHub CLI
+      # Setups up Python 3.10 and GitHub CLI
+      - name: Install GitHub CLI and Python3.10
         env: # Or as an environment variable
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
@@ -33,14 +32,17 @@ jobs:
           python-version: '3.10.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
+      # Install Python3.10 Dependencies
       - name: Grab Dependencies
         run: |
           pip install -r requirements.txt
 
+      # Downloads the latest database
       - name: Market Data Download
         run: |
           python ./app.py
-          
+
+      # Updates the release with the latest database          
       - name: Update SQLite Release
         env: # Or as an environment variable
           GH_USER: ${{ secrets.GH_USER }}

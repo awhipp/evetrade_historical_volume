@@ -3,9 +3,7 @@ Data Sync Service which pulls data from the EVE API and loads it into the Elasti
 '''
 
 import time
-from datetime import datetime
 import asyncio
-import traceback
 import requests
 import sqlite3
 
