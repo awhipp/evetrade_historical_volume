@@ -2,13 +2,14 @@
 
 This is a job that will impute the historical volume based on the daily orders provided by EVE Trade ESI
 
-## Work in Progress
+## Workflow (WIP)
 
 * [DONE] Pulls the latest release from GitHub repository releases (contains 30 days of compressed order data in SQLite format)
 * [DONE] Decompresses the SQLite file
 * [DONE] Appends new data to the existing SQLite database
-* [IN_DEV] Imputes the historical volume based on the daily orders
-* [TBD] Adds the historical volume to the existing REDIS cache
+* [TODO] Imputes the historical volume based on the daily orders
+* [TODO] Adds the historical volume to the existing REDIS cache
+* [TODO] Connect to EVETrade Backend
 * [DONE] Compresses the SQLite file
 * [DONE] Pushes the compressed SQLite file to GitHub repository releases
 
