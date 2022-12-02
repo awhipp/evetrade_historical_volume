@@ -1,0 +1,52 @@
+# This is a basic workflow to help you get started with Actions
+name: Impute Historical Volume from Market Orders
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ main ]
+  # schedule:
+  #   - cron:  '0 5 * * *' 
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+        
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: Install GitHub CLI
+        env: # Or as an environment variable
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          echo $RELEASE_TOKEN > token.txt
+          gh auth login --with-token < token.txt
+          gh release download --pattern 'data.db'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+
+      - name: Grab Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Market Data Download
+        run: |
+          python ./app.py
+          
+      - name: Update SQLite Release
+        env: # Or as an environment variable
+          GH_USER: ${{ secrets.GH_USER }}
+          GH_EMAIL: ${{ secrets.GH_EMAIL }}
+        run: |
+          export today=$(date +"%Y%m%d")
+          git config --global user.email "${GH_EMAIL}"
+          git config --global user.name "${GH_USER}"
+          gh release create "SQLite3 Market Data Release: ${today}" data.db
