@@ -79,8 +79,6 @@ def ingest_into_sqlite(all_orders):
         )
     ''')
 
-    c.execute('DELETE FROM orders')
-
     for order in all_orders:
         c.execute('''
             INSERT INTO orders (
