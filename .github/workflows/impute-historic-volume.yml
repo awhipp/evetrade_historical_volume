@@ -31,7 +31,7 @@ jobs:
           gh auth login --with-token < token.txt
           gh release download --pattern 'data.db.zip'
           pip install -r requirements.txt
-          apt install zip unzip -y
+          sudo apt install zip unzip -y
           unzip data.db.zip
       - uses: actions/setup-python@v4
         with:
