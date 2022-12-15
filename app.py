@@ -61,9 +61,10 @@ def ingest_into_sqlite(all_orders):
 
     conn = sqlite3.connect('data.db')
 
-    c = conn.cursor()
+    cursor = conn.cursor()
 
-    c.execute('''
+    # Create the orders table if it doesn't exist
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS orders (
             date DATE DEFAULT CURRENT_DATE,
             order_id INTEGER,
@@ -79,8 +80,9 @@ def ingest_into_sqlite(all_orders):
         )
     ''')
 
+    # Insert the orders into the database
     for order in all_orders:
-        c.execute('''
+        cursor.execute('''
             INSERT INTO orders (
                 order_id,
                 region_id,
@@ -109,8 +111,12 @@ def ingest_into_sqlite(all_orders):
             order['volume_total'] - order['volume_remain']
         ))
 
+    # Delete orders older than 31 days (to save space)
+    ## 31 days instead of 30 so we can see the change over time from 30 days
+    cursor.execute("DELETE FROM orders WHERE date <= date('now','-31 day')")
     conn.commit()
 
+    # Vacuum the database to save space
     conn.execute("VACUUM")
     conn.commit()
 
