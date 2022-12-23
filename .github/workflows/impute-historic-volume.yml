@@ -4,7 +4,7 @@ name: Impute Historical Volume from Market Orders
 # Workflow will run daily
 on:
   schedule:
-    - cron:  '0 5 * * *' 
+    - cron: '0 0-23 * * *' 
     
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -47,7 +47,7 @@ jobs:
           GH_EMAIL: ${{ secrets.GH_EMAIL }}
         run: |
           zip data.db.zip data.db
-          export today=$(date +"%Y%m%d")
+          export today=$(date +"%Y%m%d%H%M")
           git config --global user.email "${GH_EMAIL}"
           git config --global user.name "${GH_USER}"
           gh release create "v${today}" -n "SQLite3 Market Data ${today}" -t "Date: ${today}" data.db.zip
