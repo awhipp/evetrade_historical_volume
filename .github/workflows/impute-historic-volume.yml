@@ -50,4 +50,5 @@ jobs:
           export today=$(date +"%Y%m%d%H%M")
           git config --global user.email "${GH_EMAIL}"
           git config --global user.name "${GH_USER}"
+          gh release list | awk '{print}' | grep -v "Latest" | awk '{print $3}' | xargs -L1 gh release delete
           gh release create "v${today}" -n "SQLite3 Market Data ${today}" -t "Date: ${today}" data.db.zip
