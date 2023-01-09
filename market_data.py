@@ -55,8 +55,7 @@ class MarketData:
             print(f'WARNING: ESI limit remaining is {limit_remain}')
             time.sleep(5)
 
-    @staticmethod
-    async def get_market_data(session, url):
+    async def get_market_data(self, session, url):
         '''
         Asynchronously requests the market data for a given ESI page
         '''
