@@ -60,8 +60,13 @@ class MarketData:
         '''
         Asynchronously requests the market data for a given ESI page
         '''
-        async with session.get(url) as resp:
-            return await resp.json()
+        try:
+            async with session.get(url) as resp:
+                return await resp.json()
+        except:
+            print(f"Failed to get orders for {url}. Waiting 60 seconds and trying again.")
+            time.sleep(60)
+            return await self.get_market_data(session, url)
 
     async def execute_requests(self):
         '''
