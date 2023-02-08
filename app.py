@@ -139,5 +139,14 @@ def execute_sync():
     end = time.time()
     minutes = round((end - start) / 60, 2)
     print(f'Completed in {minutes} minutes.')
+    return True
 
-execute_sync()
+complete = False
+while not complete:
+    try:
+        complete = execute_sync()
+    except Exception as e:
+        print(f'Error: {e}')
+        print('Retrying in 2 minutes.')
+        time.sleep(120)
+
