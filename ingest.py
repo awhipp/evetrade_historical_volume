@@ -66,7 +66,7 @@ def execute_sqlite_query():
         volume = int(row[2])
         results.append({
             'name': f'{region_id}-{type_id}',
-            'value': f'{volume},{volume},{volume}',
+            'value': f'{volume}',
         })
     conn.commit()
     conn.close()
