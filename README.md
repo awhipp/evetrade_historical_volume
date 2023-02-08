@@ -1,8 +1,12 @@
 # EVE Trade Historical Volume Job
 
-This is a job that will impute the historical volume based on the daily orders provided by EVE Trade ESI
+This is a job that will impute the historical volume based on the regular market orders provided by EVE Trade ESI
 
-## Workflow (WIP)
+[![Historical Market Data](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-market-data.yml/badge.svg)](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-market-data.yml)
+
+[![Historical Volume Ingest](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-volume-ingest.yml/badge.svg)](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-volume-ingest.yml)
+
+## Workflow
 
 * Pulls the latest release from GitHub repository releases (contains 30 days of compressed order data in SQLite format)
 * Decompresses the SQLite file
@@ -18,9 +22,9 @@ This is a job that will impute the historical volume based on the daily orders p
 * sqlite3
 * python3.10
 * poetry
-    * poetry install
-    * poetry update
-    * poetry run python app.py
+  * poetry install
+  * poetry update
+  * poetry run python app.py
 
 ## Development
 
