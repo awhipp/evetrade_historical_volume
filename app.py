@@ -1,5 +1,5 @@
 '''
-Data Sync Service which pulls data from the EVE API and loads it into the Elasticsearch instance
+Generates a SQLite database of market data from the EVE Online API.
 '''
 
 import time
@@ -113,7 +113,7 @@ def ingest_into_sqlite(all_orders):
 
     # Delete orders older than 31 days (to save space)
     ## 31 days instead of 30 so we can see the change over time from 30 days
-    cursor.execute("DELETE FROM orders WHERE date <= date('now','-31 day')")
+    cursor.execute("DELETE FROM orders WHERE date <= date('now','-21 day')")
     conn.commit()
 
     # Vacuum the database to save space

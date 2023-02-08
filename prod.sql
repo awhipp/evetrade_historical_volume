@@ -4,12 +4,12 @@
 pragma temp_store = memory;
 pragma mmap_size = 1099511627776;
 pragma page_size = 65536;
-.open data.db
+.open data.db;
 pragma optimize;
-.headers ON
-.timer ON
-.mode csv
-.output output.csv
+.headers ON;
+.timer ON;
+-- .mode csv;
+-- .output output.csv
 -- .mode stdout
 
 -- Step 1: Get the latest order for each order_id and sum the volume
