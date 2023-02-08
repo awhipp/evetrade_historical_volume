@@ -20,8 +20,13 @@ jobs:
         
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
       
-      # Setups up Python 3.10 and GitHub CLI
+      # Setups GitHub CLI and gets data.db
       - name: Install Dependencies
         env: # Or as an environment variable
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
@@ -32,10 +37,6 @@ jobs:
           pip install -r requirements.txt
           sudo apt install zip unzip -y
           unzip data.db.zip
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
       # Aggregates and Ingests Data into Redis
       - name: Volume Ingest
