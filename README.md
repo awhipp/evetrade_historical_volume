@@ -29,7 +29,7 @@ This is a job that will impute the historical volume based on the regular market
 ## Development
 
 * Generate requirements.txt
-    * `poetry export --without-hashes --format=requirements.txt > requirements.txt`
+  * `poetry export --without-hashes --format=requirements.txt > requirements.txt`
 
 ## Process
 
