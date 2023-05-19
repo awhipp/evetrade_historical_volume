@@ -76,7 +76,6 @@ def get_data(region_id):
     '''
     Gets market data for a given region and saves it to the local file system
     '''
-    start = time.time()
     pipeline = redis_connection.pipeline()
 
     type_ids =  get_type_ids(region_id)
@@ -105,10 +104,6 @@ def get_data(region_id):
     print(f'-- Executing pipeline for region {region_id}')
     pipeline.execute()
 
-    end = time.time()
-    minutes = round((end - start) / 60, 2)
-    print(f'Completed in {minutes} minutes.')
-
 def execute_sync():
     '''
     Executes the data sync process
@@ -125,6 +120,7 @@ def execute_sync():
         curr_region = region_ids[0]
         curr_index = 0
     else:
+        curr_region = int(curr_region)
         curr_index = region_ids.index(curr_region)
     
     # If we're at the end of the list, start over
