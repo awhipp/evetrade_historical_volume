@@ -14,6 +14,8 @@ REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = os.getenv('REDIS_PORT', '6379')
 REDIS_PW = os.getenv('REDIS_PW', 'password')
 
+redis_connection = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PW, decode_responses=True)
+
 ONE_YEAR = 60 * 60 * 24 * 7 * 4 * 12
 
 # urllib3 ignore SSL
@@ -70,48 +72,42 @@ def get_type_ids(region_id):
     
     return type_ids
 
-def get_data(region_ids):
+def get_data(region_id):
     '''
     Gets market data for a given region and saves it to the local file system
     '''
-  
-    redis_connection = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PW, decode_responses=True)
+    start = time.time()
+    pipeline = redis_connection.pipeline()
 
-    for region_idx, region_id in enumerate(region_ids):
-        len_region_ids = len(region_ids)
-        start = time.time()
-        pipeline = redis_connection.pipeline()
+    type_ids =  get_type_ids(region_id)
+    print(f'-- Getting data for {len(type_ids)} types in region {region_id}')
+    for id_idx, type_id in enumerate(type_ids):
+        len_type_ids = len(type_ids)
+        # Get the orders for the region
+        response = requests.get(
+            f'https://esi.evetech.net/latest/markets/{region_id}/history/?datasource=tranquility&type_id={type_id}',
+            timeout=30,
+            verify=False
+        )
+        history = response.json()
+        if len(history) == 0 or 'error' in history:
+            continue
+        else:
+            try:
+                print(f'-- (ID: {id_idx+1} of {len_type_ids}) Setting {region_id}-{type_id} to {history[-1]["average"]}')
+                pipeline.set(
+                    name = f'{region_id}-{type_id}',
+                    value = history[-1]['average'],
+                    ex = ONE_YEAR
+                )
+            except Exception:
+                print(history)
+    print(f'-- Executing pipeline for region {region_id}')
+    pipeline.execute()
 
-        type_ids =  get_type_ids(region_id)
-        print(f'-- Getting data for {len(type_ids)} types in region {region_id}')
-        for id_idx, type_id in enumerate(type_ids):
-            len_type_ids = len(type_ids)
-            # Get the orders for the region
-            response = requests.get(
-                f'https://esi.evetech.net/latest/markets/{region_id}/history/?datasource=tranquility&type_id={type_id}',
-                timeout=30,
-                verify=False
-            )
-            history = response.json()
-            if len(history) == 0 or 'error' in history:
-                continue
-            else:
-                try:
-                    print(f'-- (Region: {region_idx+1} of {len_region_ids} - ID: {id_idx+1} of {len_type_ids}) Setting {region_id}-{type_id} to {history[-1]["average"]}')
-                    pipeline.set(
-                        name = f'{region_id}-{type_id}',
-                        value = history[-1]['average'],
-                        ex = ONE_YEAR
-                    )
-                except Exception:
-                    print(history)
-        print(f'-- Executing pipeline for region {region_id}')
-        pipeline.execute()
-        print(f'Percent complete: {round((region_idx / len(region_ids)) * 100, 2)}%')
-    
-        end = time.time()
-        minutes = round((end - start) / 60, 2)
-        print(f'Completed in {minutes} minutes.')
+    end = time.time()
+    minutes = round((end - start) / 60, 2)
+    print(f'Completed in {minutes} minutes.')
 
 def execute_sync():
     '''
@@ -119,8 +115,30 @@ def execute_sync():
     '''
     start = time.time()
 
+    # Get next region to process
     region_ids = get_region_ids()
-    get_data(region_ids)
+    curr_region = redis_connection.get('volume_region')
+    curr_index = -1
+
+    # If no region is set, start at the beginning
+    if curr_region is None:
+        curr_region = region_ids[0]
+        curr_index = 0
+    else:
+        curr_index = region_ids.index(curr_region)
+    
+    # If we're at the end of the list, start over
+    next_region = ''
+    try:
+        next_region = region_ids[curr_index + 1]
+    except IndexError:
+        next_region = region_ids[0]
+    
+    redis_connection.set('volume_region', next_region)
+    print(f'Current region: {curr_region}')
+    print(f'Next region: {next_region}')
+
+    get_data(curr_region)
 
     end = time.time()
     minutes = round((end - start) / 60, 2)

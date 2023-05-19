@@ -20,3 +20,4 @@ This is a job that will impute the historical volume based on the regular market
 ## Process
 
 * Iteratively pulls region IDs and type IDs and requests data from EVE ESI API.
+* Does one region every hour, and loops through all in roughly 1.5 days.
