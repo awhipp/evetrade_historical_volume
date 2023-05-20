@@ -93,10 +93,11 @@ def get_data(region_id):
             continue
         else:
             try:
-                print(f'-- (ID: {id_idx+1} of {len_type_ids}) Setting {region_id}-{type_id} to {history[-1]["average"]}')
+                average = int(float(history[-1]['average']))
+                print(f'-- (ID: {id_idx+1} of {len_type_ids}) Setting {region_id}-{type_id} to {average}')
                 pipeline.set(
                     name = f'{region_id}-{type_id}',
-                    value = int(float(history[-1]['average'])),
+                    value = average,
                     ex = ONE_YEAR
                 )
             except Exception:
