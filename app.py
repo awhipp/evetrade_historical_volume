@@ -72,6 +72,16 @@ def get_type_ids(region_id):
     
     return type_ids
 
+def get_average_volume(history):
+    '''
+    Gets the average volume for a given type
+    '''
+    total_volume = 0
+    for day in history:
+        total_volume += day['volume']
+    
+    return int(float(total_volume / len(history)))
+
 def get_data(region_id):
     '''
     Gets market data for a given region and saves it to the local file system
@@ -93,7 +103,7 @@ def get_data(region_id):
             continue
         else:
             try:
-                average = int(float(history[-1]['volume']))
+                average = get_average_volume(history)
                 print(f'-- (ID: {id_idx+1} of {len_type_ids}) Setting {region_id}-{type_id} to {average}')
                 pipeline.set(
                     name = f'{region_id}-{type_id}',
