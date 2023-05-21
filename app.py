@@ -93,7 +93,7 @@ def get_data(region_id):
             continue
         else:
             try:
-                average = int(float(history[-1]['average']))
+                average = int(float(history[-1]['volume']))
                 print(f'-- (ID: {id_idx+1} of {len_type_ids}) Setting {region_id}-{type_id} to {average}')
                 pipeline.set(
                     name = f'{region_id}-{type_id}',
