@@ -4,7 +4,7 @@ name: Historical Volume Ingest
 # Workflow will run every half hour
 on:
   schedule:
-    - cron: '1/15 * * * *' 
+    - cron: '0 * * * *' 
   push:
     branches: [ main ]
     
