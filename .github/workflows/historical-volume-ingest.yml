@@ -20,15 +20,15 @@ jobs:
         
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      
-      # Setups up Python 3.10 and GitHub CLI
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          
+      # Setups up Python 3.10 and GitHub CLI
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
 
       # Downloads the latest database
       - name: Historical Ingest
