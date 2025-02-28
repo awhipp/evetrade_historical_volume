@@ -1,6 +1,8 @@
 # EVE Trade Historical Volume Job
 
-This is a job that will impute the historical volume based on the regular market orders provided by EVE Trade ESI
+This is a job that will use the EVE API to get he average volume for orders in a region and store hem in redis.
+
+Originally it was used impute the historical volume based on the regular market orders provided by EVE Trade ESI when the volume endpoint was down. This is why there are releases which had the historical market data.
 
 [![Historical Volume Ingest](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-volume-ingest.yml/badge.svg)](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-volume-ingest.yml)
 
