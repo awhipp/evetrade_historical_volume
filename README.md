@@ -14,10 +14,10 @@ Originally it was used impute the historical volume based on the regular market 
   * poetry update
   * poetry run python app.py
 
-## Development
+### Precommit
 
-* Generate requirements.txt
-  * `poetry export --without-hashes --format=requirements.txt > requirements.txt`
+* poetry run pre-commit install
+* poetry run pre-commit run --all-files
 
 ## Process
 
