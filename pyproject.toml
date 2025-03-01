@@ -15,7 +15,7 @@ boto3 = "^1.26.21"
 aiohttp = "^3.8.5"
 asyncio = "^3.4.3"
 redis = "^4.4.4"
-setuptools = "^67.2.0"
+setuptools = "^70.0.0"
 python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
