@@ -80,6 +80,8 @@ def get_type_ids(region_id: int) -> List[int]:
 
     return type_ids
 
+from datetime import datetime, timedelta
+
 def get_average_volume(history: List[Dict[str, Any]]) -> int:
     """
     Gets the average volume for a given type over the last 20 days
@@ -92,6 +94,12 @@ def get_average_volume(history: List[Dict[str, Any]]) -> int:
         day for day in history
         if datetime.strptime(day["date"], "%Y-%m-%d") >= twenty_days_ago
     ]
+    
+    if not recent_history:
+        return 0  # or handle this case as needed
+    
+    total_volume = sum(day["volume"] for day in recent_history)
+    return int(total_volume / len(recent_history))
 
 def slice_history(history: List[Dict[str, Any]], num_days: int) -> List[Dict[str, Any]]:
     """
