@@ -4,7 +4,6 @@ Generates historical volume details and loads them into Redis
 
 import concurrent.futures
 import os
-import threading
 import time
 from datetime import datetime, timedelta
 from typing import Any, Dict, List
@@ -80,7 +79,6 @@ def get_type_ids(region_id: int) -> List[int]:
 
     return type_ids
 
-from datetime import datetime, timedelta
 
 def get_average_volume(history: List[Dict[str, Any]]) -> int:
     """
@@ -88,18 +86,20 @@ def get_average_volume(history: List[Dict[str, Any]]) -> int:
     """
     # Get the date 20 days ago
     twenty_days_ago = datetime.now() - timedelta(days=20)
-    
+
     # Filter history to include only the last 20 days
     recent_history = [
-        day for day in history
+        day
+        for day in history
         if datetime.strptime(day["date"], "%Y-%m-%d") >= twenty_days_ago
     ]
-    
+
     if not recent_history:
         return 0  # or handle this case as needed
-    
+
     total_volume = sum(day["volume"] for day in recent_history)
     return int(total_volume / len(recent_history))
+
 
 def slice_history(history: List[Dict[str, Any]], num_days: int) -> List[Dict[str, Any]]:
     """
