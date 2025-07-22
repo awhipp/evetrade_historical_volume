@@ -2,7 +2,7 @@ name: Historical Volume Ingest
 
 on:
   schedule:
-    - cron: '0,30 * * * *'
+    - cron: '0 * * * *'
   pull_request:
     branches: [ '*' ]
 
